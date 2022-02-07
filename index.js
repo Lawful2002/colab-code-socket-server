@@ -5,7 +5,7 @@ const { createServer } = require('http');
 const app = express();
 const server = createServer(app);
 
-function joinRoom (socket, newRoom) {
+function joinRoom(socket, newRoom) {
     let prevRoom = Object.keys(socket.rooms)[1];
     socket.leave(prevRoom);
     socket.join(newRoom);
@@ -19,29 +19,29 @@ const io = socketIO(server, {
     }
 })
 
-io.on('connection', (socket)=>{
+io.on('connection', (socket) => {
     console.log("someone joined");
 
-    socket.on('createRoom', roomName=>{
+    socket.on('createRoom', roomName => {
         console.log(roomName);
         joinRoom(socket, roomName);
     });
 
-    socket.on('joinRoom', (roomName)=>{
+    socket.on('joinRoom', (roomName) => {
         joinRoom(socket, roomName);
     });
 
-    socket.on('leaveRoom', (roomName)=>{
+    socket.on('leaveRoom', (roomName) => {
         socket.leave(roomName);
     });
 
-    socket.on('sendData', data=>{
+    socket.on('sendData', data => {
         console.log(Array.from(socket.rooms)[1]);
-        socket.to(Array.from(socket.rooms)[1]).emit('dataChange', data); //change to io.to(..).. if the current setup causes issues
+        io.to(Array.from(socket.rooms)[1]).emit('dataChange', data); //change to io.to(..).. if the current setup causes issues
     })
 })
 
 const port = process.env.PORT || 3000;
-server.listen(port, ()=>{
+server.listen(port, () => {
     console.log("server is running: " + port);
 })
