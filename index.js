@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
 
     socket.on('sendData', data => {
         console.log(Array.from(socket.rooms)[1]);
-        io.to(Array.from(socket.rooms)[1]).emit('dataChange', data); //change to io.to(..).. if the current setup causes issues
+        socket.to(Array.from(socket.rooms)[1]).emit('dataChange', data); //change to io.to(..).. if the current setup causes issues
     })
 })
 
